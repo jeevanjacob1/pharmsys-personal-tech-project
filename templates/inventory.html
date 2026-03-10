@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="header-action glass">
+    <h2>Inventory</h2>
+    <a href="{{ url_for('add_medicine') }}" class="btn">Add New Medicine</a>
+</div>
+
+<div class="table-container glass">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Brand</th>
+                <th>Category</th>
+                <th>Price ($)</th>
+                <th>Stock</th>
+                <th>Expiry Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for m in medicines %}
+            <tr>
+                <td>{{ m.id }}</td>
+                <td>{{ m.name }}</td>
+                <td>{{ m.brand }}</td>
+                <td><span class="badge">{{ m.category }}</span></td>
+                <td>{{ "%.2f"|format(m.price) }}</td>
+                <td class="{% if m.stock < 20 %}low-stock{% endif %}">{{ m.stock }}</td>
+                <td>{{ m.expiry_date.strftime('%Y-%m-%d') }}</td>
+                <td>
+                    <a href="{{ url_for('delete_medicine', id=m.id) }}" class="btn-sm btn-danger"
+                        onclick="return confirm('Are you sure?')">Delete</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="8">No medicines found in inventory.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
